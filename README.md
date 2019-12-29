@@ -20,9 +20,4 @@ Frameworks Used - Keras
 
 Languages Used - Python  
 Frameworks Used - PyTorch
-=======
-
-1. Challenge 1 - Carvana Image Masking Challenge (Kaggle)
-Languages Used - Python
-Frameworks Used - PyTorch
 
