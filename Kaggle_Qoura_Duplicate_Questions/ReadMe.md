@@ -2,7 +2,7 @@
 
 The task is to identify duplicate question pairs 
 
-Reference - https://data.quora.com/First-Quora-Dataset-Release-Question-Pairs
+Dataset URL - https://data.quora.com/First-Quora-Dataset-Release-Question-Pairs
 
 ## Dataset    
     Training Set - 404290
