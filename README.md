@@ -4,7 +4,7 @@ Computer Vision &amp; Deep Learning Projects
 This repository contains codes for real world Computer Vision Problems for small and large datasets.
 Challenges contains problems and datasets from Kaggle or any open source datasets.
 
-<<<<<<< HEAD
+
 #### 1. Challenge 1 - Qoura Duplicate Questions Challenge (Kaggle)       
 
 Languages Used - Python    
@@ -26,4 +26,3 @@ Frameworks Used - PyTorch
 Languages Used - Python
 Frameworks Used - PyTorch
 
->>>>>>> 8215bb28523e8de6a7bffe61fed9e5b306462dfa
