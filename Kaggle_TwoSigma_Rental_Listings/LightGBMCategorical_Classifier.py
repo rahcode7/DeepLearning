@@ -143,11 +143,7 @@ if __name__ == "__main__":
          }
 
     df = pd.read_json(open("input/train.json", "r"))
-    test = pd.read_json(open("input/test.json", "r"))
-
-
     df = create_numeric_features(df)
-
     df = feature_engineering(df)
    
    
@@ -175,6 +171,12 @@ if __name__ == "__main__":
 
     X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.33) 
 
+
+    y_val = pd.DataFrame(y_val) 
+    y_val.columns = ["Class"]
+    y_val.to_csv("y_val.csv",index=None)
+
+
     y_train_encoded = le.fit_transform(y_train)
     print(pd.Series(y_train_encoded).value_counts())
 
@@ -193,25 +195,53 @@ if __name__ == "__main__":
 
     y_pred = model.predict(X_val)
     y_pred_proba = model.predict(X_val)
+    print(y_pred_proba[:5])
     evaluate_metrics(y_val,y_pred,y_pred_proba)
 
 
     # Write Predictions
-    pd.DataFrame(y_val).to_csv('Y_predictions_LGBMcat.csv',index=None)
+    pd.DataFrame(y_pred).to_csv('Y_predictions_LGBMcat.csv',index=None)
     y_prob = pd.DataFrame(y_pred_proba)
     y_prob.columns = classes
     y_prob.to_csv("Probabilities_LGBMcat_classifier.csv",index=None)
         
     # Save to file in the current working directory
     final_model = model
-    pkl_filename = "/Users/rahulm/Desktop/LEARN/Rental_Challenge/restapi/model_rental_lgbmcat.pkl"
+    pkl_filename = "/Users/rahulm/Desktop/LEARN/OLX_Shared/restapi/model_rental_lgbmcat.pkl"
     with open(pkl_filename, 'wb') as file:
         pickle.dump(final_model, file)
     print("Model Dumped in RestAPI folder")
         
     model_columns = list(X_train.columns)
-    joblib.dump(model_columns, '/Users/rahulm/Desktop/LEARN/Rental_Challenge/restapi/model_rental_lgbmcat_columns.pkl')
+    joblib.dump(model_columns, '/Users/rahulm/Desktop/LEARN/OLX_Shared/restapi/model_rental_lgbmcat_columns.pkl')
     print("Model Columns Dumped in RestAPI folder")   
 
     # Write Submission file
+
+    test = pd.read_json(open("input/test.json", "r"))
+    print(test.shape)
+
+    sub = pd.DataFrame()
+    sub["listing_id"] = test["listing_id"]
+
+    test = create_numeric_features(test)
+
+    test = feature_engineering(test)
+
+    cate_features_name = ["manager_id","highlight_flag","contact_flag"]
+    for c in cate_features_name:
+        test[c] = test[c].astype('category')
+
+    # num_feats = ["bedrooms", "latitude", "longitude", "price","num_photos", "num_features", "num_description_words", "created_month",
+    #             "created_day","street_display_dist","highlight_flag","contact_flag","desc_uplow_ratio","desc_upper_num"]
+
+    test = test[num_feats]
+
+    labels2idx = {label: i for i, label in enumerate(classes)}
+    z = model.predict(test)
+
+    
+    for label in ["high","medium", "low"]:
+        sub[label] = z[:, labels2idx[label]]
+    sub.to_csv("submission_test_LGBMCat.csv", index=False)
 
