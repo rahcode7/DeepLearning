@@ -107,7 +107,7 @@ def prepare_train_test(X,y):
     return(X_train, X_val, y_train, y_val)
 
 def evaluate_metrics(y_val,y_pred,y_prob):
-    print("Accuracy:",metrics.accuracy_score(y_val, y_pred))
+    #print("Accuracy:",metrics.accuracy_score(y_val, y_pred))
     print("Log Loss:",log_loss(y_val, y_prob))
 
 
@@ -123,18 +123,6 @@ def evaluate_metrics(y_val,y_pred,y_prob):
 # grid_search = GridSearchCV(lg, n_jobs=-1, param_grid=param_dist, cv = 3, scoring="neg_log_loss", verbose=5)
 # grid_search.fit(train,y_train)
 # grid_search.best_estimator_
-
-# RANDOM_SEED = 123
-# d_train = lgb.Dataset(X_train,label=y_train_encoded)
-# params = {"application": "multiclass","max_depth": 50, "learning_rate" : 0.01, "num_leaves": 900,  "n_estimators": 300,
-#              "num_class":3,"metric":"multi_logloss","is_unbalance" :"True",
-#              "num_threads":4,
-#              "seed":RANDOM_SEED
-#          }
-
-#params,
-
-
 
 if __name__ == "__main__":
 
@@ -183,6 +171,7 @@ if __name__ == "__main__":
     from sklearn import preprocessing
     le = preprocessing.LabelEncoder()
     le.fit(y)
+    classes = le.classes_
 
     X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.33) 
 
@@ -200,12 +189,11 @@ if __name__ == "__main__":
     lg = lgb.LGBMClassifier(silent=False)
 
     # ##### LightGBM With categorical features
-    model3 = lgb.train(params, d_train,categorical_feature=cate_features_name)
+    model = lgb.train(params, d_train,categorical_feature=cate_features_name)
 
-    y_pred = model3.predict(X_val)
-    y_pred_proba = model3.predict(X_val)
-    
-    evaluate_metrics(y_val,y_pred,y_prob)
+    y_pred = model.predict(X_val)
+    y_pred_proba = model.predict(X_val)
+    evaluate_metrics(y_val,y_pred,y_pred_proba)
 
 
     # Write Predictions
@@ -215,7 +203,7 @@ if __name__ == "__main__":
     y_prob.to_csv("Probabilities_LGBMcat_classifier.csv",index=None)
         
     # Save to file in the current working directory
-    final_model = model3
+    final_model = model
     pkl_filename = "/Users/rahulm/Desktop/LEARN/Rental_Challenge/restapi/model_rental_lgbmcat.pkl"
     with open(pkl_filename, 'wb') as file:
         pickle.dump(final_model, file)
@@ -225,6 +213,5 @@ if __name__ == "__main__":
     joblib.dump(model_columns, '/Users/rahulm/Desktop/LEARN/Rental_Challenge/restapi/model_rental_lgbmcat_columns.pkl')
     print("Model Columns Dumped in RestAPI folder")   
 
-  
-
+    # Write Submission file
 
