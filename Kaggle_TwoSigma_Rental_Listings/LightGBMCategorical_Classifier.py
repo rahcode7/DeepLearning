@@ -207,13 +207,13 @@ if __name__ == "__main__":
         
     # Save to file in the current working directory
     final_model = model
-    pkl_filename = "/Users/rahulm/Desktop/LEARN/OLX_Shared/restapi/model_rental_lgbmcat.pkl"
+    pkl_filename = "/Users/rahulm/Desktop/LEARN/Rental_Challenge/restapi/model_rental_lgbmcat.pkl"
     with open(pkl_filename, 'wb') as file:
         pickle.dump(final_model, file)
     print("Model Dumped in RestAPI folder")
         
     model_columns = list(X_train.columns)
-    joblib.dump(model_columns, '/Users/rahulm/Desktop/LEARN/OLX_Shared/restapi/model_rental_lgbmcat_columns.pkl')
+    joblib.dump(model_columns, '/Users/rahulm/Desktop/LEARN/Rental_Challenge/restapi/model_rental_lgbmcat_columns.pkl')
     print("Model Columns Dumped in RestAPI folder")   
 
     # Write Submission file
